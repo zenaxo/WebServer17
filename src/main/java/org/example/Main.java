@@ -2,6 +2,7 @@ package org.example;
 
 import org.json.JSONObject;
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Files;
@@ -27,7 +28,7 @@ public class Main {
     private static final Instant START_TIME = Instant.now();
 
     public static void main(String[] args) throws IOException {
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+        try (ServerSocket serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName("0.0.0.0"))) {
             System.out.println("Server started on port " + PORT);
             while (true) {
                 Socket clientSocket = serverSocket.accept();
@@ -41,7 +42,7 @@ public class Main {
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             StringBuilder requestBuilder = new StringBuilder();
             String line;
-            while (!(line = in.readLine()).isBlank()) {
+            while (!(line = in.readLine()).isEmpty()) {
                 requestBuilder.append(line).append("\r\n");
             }
 
