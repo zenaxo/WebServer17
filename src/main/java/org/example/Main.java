@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
 
-    private static final int PORT = 8080;
+    private static final int PORT = 5555;
     private static final Path BASE_DIRECTORY = Paths.get("www");
     private static final Path IMAGES_DIRECTORY = BASE_DIRECTORY.resolve("images");
     private static final Path MISC_DIRECTORY = BASE_DIRECTORY.resolve("misc");
@@ -28,7 +28,7 @@ public class Main {
     private static final Instant START_TIME = Instant.now();
 
     public static void main(String[] args) throws IOException {
-        try (ServerSocket serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName("0.0.0.0"))) {
+        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Server started on port " + PORT);
             while (true) {
                 Socket clientSocket = serverSocket.accept();
