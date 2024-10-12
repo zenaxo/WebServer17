@@ -33,6 +33,8 @@ public class Main {
     /** The start time of the server */
     private static final Instant START_TIME = Instant.now();
 
+    private enum FILETYPE {PNG, TXT, HTML};
+
     public static void main(String[] args){
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Server started on port " + PORT);
@@ -76,8 +78,8 @@ public class Main {
             /* Increase the number of received request */
             requestCounter.incrementAndGet();
 
-            /* Assert that the request is a GET request... */
-            if ("GET".equals(method)) {
+            /* Assert that the request is a GET request and path is not empty */
+            if ("GET".equals(method) && path != null) {
                 handleGetRequest(clientSocket, path);
             }
             else {    /* Otherwise, return an error to the client... */
@@ -97,6 +99,7 @@ public class Main {
      * @throws IOException  If an I/O error occurs while handling the request.
      */
     private static void handleGetRequest(Socket clientSocket, String path) throws IOException {
+
         if ("/debug".equals(path)) {
 
             /* Create the JSON object for the debug path */
@@ -109,58 +112,47 @@ public class Main {
 
             /* Return the JSON object */
             sendResponse(clientSocket, "200 OK", "application/json", data.toString().getBytes());
-
         }
-        // Handle requests for images
-        else if (path.startsWith("/assets/")) {
-            String assetName = path.substring("/assets/".length());
-            Path filePath = IMAGES_DIRECTORY.resolve(assetName);
-
-            // Check that the image exists
-            if (Files.exists(filePath)) {
-                String contentType = guessContentType(filePath);
-                // And that it is of a supported type...
-                if (isSupportedContentType(contentType)) {
-                    // Return the image
-                    sendResponse(clientSocket, "200 OK", contentType, Files.readAllBytes(filePath));
-                } else {
-                    sendResponse(clientSocket, "415 Unsupported Media Type", "text/plain", "Unsupported file type".getBytes());
-                }
-            } else {
-                byte[] notFoundContent = "<h1>404 Not Found</h1>".getBytes();
-                sendResponse(clientSocket, "404 Not Found", "text/html", notFoundContent);
-            }
+        /* Handle requests for images */
+        else if (path.endsWith(".png")) {
+            /*Extracts the file */
+            String assetName = path.substring("/assets/".length()); /* Ex. extract image.png */
+            Path filePath = IMAGES_DIRECTORY.resolve(assetName);    /* Resolves the full path to /misc/text.txt */
+            handleFileRequest(clientSocket, filePath);
         }
-        // Handle requests for other assets (.txt)...
-        else if (path.startsWith("/misc/")) {
+        /* Handle requests for other assets (.txt) */
+        else if (path.endsWith(".txt")) {
             String miscFileName = path.substring("/misc/".length());
             Path filePath = MISC_DIRECTORY.resolve(miscFileName);
-            if(Files.exists(filePath)) {
-                String contentType = guessContentType(filePath);
-                if (isSupportedContentType(contentType)) {
-                    sendResponse(clientSocket, "200 OK", contentType, Files.readAllBytes(filePath));
-                } else {
-                    sendResponse(clientSocket, "415 Unsupported Media Type", "text/plain", "Unsupported file type".getBytes());
-                }
-            } else {
-                byte[] notFoundContent = "<h1>404 Not Found</h1>".getBytes();
-                sendResponse(clientSocket, "404 Not Found", "text/html", notFoundContent);
-            }
+            handleFileRequest(clientSocket, filePath);
         }
-        // Return html files...
+        /* Handle html files or specific path that lead to files */
         else {
             Path filePath = getFilePath(path);
-            if (Files.exists(filePath)) {
-                String contentType = guessContentType(filePath);
-                if (isSupportedContentType(contentType)) {
-                    sendResponse(clientSocket, "200 OK", contentType, Files.readAllBytes(filePath));
-                } else {
-                    sendResponse(clientSocket, "415 Unsupported Media Type", "text/plain", "Unsupported file type".getBytes());
-                }
+            handleFileRequest(clientSocket, filePath);
+        }
+    }
+
+    /**
+     * The method handles file requests from the client by checking if the requested file exists,
+     * determining its content type, and sending the appropriate response.
+     *
+     * @param clientSocket  A socket responsible for the connection
+     * @param filePath      A path to the requested file
+     * @throws IOException  If an I/O error occurs while handling the request.
+     */
+    private static void handleFileRequest(Socket clientSocket, Path filePath) throws IOException {
+        /* Check if file is exist and not a directory*/
+        if(Files.exists(filePath) && !Files.isDirectory(filePath)) {
+            String contentType = guessContentType(filePath);
+            if (isSupportedContentType(contentType)) {
+                sendResponse(clientSocket, "200 OK", contentType, Files.readAllBytes(filePath));
             } else {
-                byte[] notFoundContent = "<h1>404 Not Found</h1>".getBytes();
-                sendResponse(clientSocket, "404 Not Found", "text/html", notFoundContent);
+                sendResponse(clientSocket, "415 Unsupported Media Type", "text/plain", "Unsupported file type".getBytes());
             }
+        } else {
+            byte[] notFoundContent = "<h1>404 Not Found</h1>".getBytes();
+            sendResponse(clientSocket, "404 Not Found", "text/html", notFoundContent);
         }
     }
 
