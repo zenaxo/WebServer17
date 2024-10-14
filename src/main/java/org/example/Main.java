@@ -33,8 +33,6 @@ public class Main {
     /** The start time of the server */
     private static final Instant START_TIME = Instant.now();
 
-    private enum FILETYPE {PNG, TXT, HTML};
-
     public static void main(String[] args){
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Server started on port " + PORT);
