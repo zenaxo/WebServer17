@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
     /** A port number for running a server */
-    private static final int PORT = 5555;
+    //private static final int PORT = 42069;
     /** Base directory where HTML files are located */
     private static final Path BASE_DIRECTORY = Paths.get("www");
     /** The directory for image files */
@@ -34,8 +34,21 @@ public class Main {
     private static final Instant START_TIME = Instant.now();
 
     public static void main(String[] args){
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            System.out.println("Server started on port " + PORT);
+	// Set a default port if not port is passed an an argument
+	int port = 5555;
+
+	for (int i = 0; i < args.length; i++) {
+	    if ("-p".equals(args[i]) && i + 1 < args.length) {
+		try {
+		   port = Integer.parseInt(args[i + 1]);
+		} catch (NumberFormatException e) {
+		   System.out.println("Invalid port number after -p. Using default port " + port);
+		}
+	    }
+	}
+
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            System.out.println("Server started on port " + port);
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 new Thread(() -> handleClient(clientSocket)).start();
