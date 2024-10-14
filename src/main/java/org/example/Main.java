@@ -59,7 +59,7 @@ public class Main {
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             StringBuilder requestBuilder = new StringBuilder();
             String line;
-            while (!(line = in.readLine()).isEmpty()) {
+            while ((line = in.readLine()) != null && !line.isEmpty()) {
                 requestBuilder.append(line).append("\r\n");
             }
             String request = requestBuilder.toString();
@@ -70,6 +70,7 @@ public class Main {
             /* Split request line into method, path, and HTTP version*/
             /* GET, /index.html, HTTP/1.1 */
             String[] requestLine = requestLines[0].split(" ");
+
             String method = requestLine[0]; /* e.g., GET */
             String path = requestLine[1];   /* e.g., /index.html*/
 
