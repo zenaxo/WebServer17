@@ -34,7 +34,7 @@ public class Main {
     private static final Instant START_TIME = Instant.now();
 
     public static void main(String[] args){
-	// Set a default port if not port is passed an an argument
+	// Set a default port if not port is passed an argument
 	int port = 5555;
 
 	for (int i = 0; i < args.length; i++) {
