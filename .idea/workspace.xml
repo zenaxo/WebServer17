@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b6b3071b-a8a2-4cb4-ac64-1298cc8862fc" name="Changes" comment="Deleted unused code">
+    <list default="true" id="b6b3071b-a8a2-4cb4-ac64-1298cc8862fc" name="Changes" comment="Added new class client for presentation.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run_server.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run_server.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -177,7 +177,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728908685085</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Added new class client for presentation.">
+      <option name="closed" value="true" />
+      <created>1729252700030</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1729252700030</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -201,7 +209,8 @@
     <MESSAGE value="Added script" />
     <MESSAGE value="Fixed some codes" />
     <MESSAGE value="Deleted unused code" />
-    <option name="LAST_COMMIT_MESSAGE" value="Deleted unused code" />
+    <MESSAGE value="Added new class client for presentation." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added new class client for presentation." />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
