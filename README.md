@@ -17,6 +17,7 @@ To start the server, use the `./run_server.sh` script. This scipt complies the c
 To start the client and connect to the server, use the run_client.sh script. 
 1. Make the script executable by running the command: `chmod +x run_client.sh`.
 2. Start the server with the command `./run_client.sh`.
+3. The user must provide the host name and port number of the server that the client want to connect
 
 ## How do I test the connection to the server?
 1. Run `curl localhost:PORT/debug` to check the server's debug information.
