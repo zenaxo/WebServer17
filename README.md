@@ -11,7 +11,7 @@ To start the server, use the `./run_server.sh` script. This scipt complies the c
 
    3.1. To run the default port, simple answer "n" or "N".
 
-   3.2. To specify a custom port, answer "y" and provide the port number.
+   3.2. To specify a custom port, answer "y" or "Y", and provide the port number.
 
 ## How to run the client?
 To start the client and connect to the server, use the run_client.sh script. 
