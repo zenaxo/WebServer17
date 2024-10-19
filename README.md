@@ -8,8 +8,10 @@ To start the server, use the **./run_server.sh** script. This scipt complies the
 1. Make the script executable by running the command: **chmod +x run_server.sh**.
 2. Start the server with the command **./run_server.sh**
 3. The script will ask **Do you want to use a specific port: (y/n):**
-3.1. To run the default port, simple answer "n" or "N".
-3.2. To specify a custom port, answer "y" and provide the port number.
+
+   3.1. To run the default port, simple answer "n" or "N".
+
+   3.2. To specify a custom port, answer "y" and provide the port number.
 
 ## How to run the server?
 To start the client and connect to the server, use the run_client.sh script. 
