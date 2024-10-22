@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="b6b3071b-a8a2-4cb4-ac64-1298cc8862fc" name="Changes" comment="Added new class client for presentation.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run_server.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run_server.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,6 +64,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.sourceCode.Java",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>

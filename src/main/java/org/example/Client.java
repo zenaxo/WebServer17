@@ -7,6 +7,14 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
+/**
+ * A simple client for testing a server.
+ * University of Umeå
+ * @version : 1.1
+ * @since : 2024-10-22
+ * @author Hannes Sjölander
+ *@author Napat Wattanputtakorn
+ */
 public class Client {
     public static void main(String[] args) {
         /* Ask the user to input the resource path */

@@ -10,42 +10,45 @@ import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * A Simple Web Server to handle GET requests.
+ * The server is able to serve html, txt, json and images.
+ * University of Umeå
+ * @version : 1.1
+ * @since : 2024-10-22
+ * @author Hannes Sjölander
+ *@author Napat Wattanputtakorn
+ */
 public class Main {
-    /** A port number for running a server */
-    //private static final int PORT = 42069;
-    /** Base directory where HTML files are located */
+
+    // Constants for file serving
     private static final Path BASE_DIRECTORY = Paths.get("www");
-    /** The directory for image files */
     private static final Path IMAGES_DIRECTORY = BASE_DIRECTORY.resolve("images");
-    /** The directory for miscellaneous files */
     private static final Path MISC_DIRECTORY = BASE_DIRECTORY.resolve("misc");
-    /** Supported content types for the server */
     private static final String[] SUPPORTED_CONTENT_TYPES = { "text/plain", "text/html", "image/png" };
-    /** Server name for the debug information */
+
+    // Info for debug
     private static final String SERVER_NAME = "Java Webserver 1.0";
-    /** Owners of the server, using for the debug */
     private static final String[] OWNERS = {
             "Hannes Sjölander, (id21hsr@cs.umu.se)",
             "Napat Wattanputtakorn, (dv22nwn@cs.umu.se)"
     };
-    /** Counter to track the number of client requests received */
     private static final AtomicInteger requestCounter = new AtomicInteger(0);
-    /** The start time of the server */
     private static final Instant START_TIME = Instant.now();
 
     public static void main(String[] args){
-	// Set a default port if not port is passed an argument
-	int port = 5555;
+        // Set a default port if not port is passed an argument
+        int port = 5555;
 
-	for (int i = 0; i < args.length; i++) {
-	    if ("-p".equals(args[i]) && i + 1 < args.length) {
-		try {
-		   port = Integer.parseInt(args[i + 1]);
-		} catch (NumberFormatException e) {
-		   System.out.println("Invalid port number after -p. Using default port " + port);
-		}
-	    }
-	}
+        for (int i = 0; i < args.length; i++) {
+            if ("-p".equals(args[i]) && i + 1 < args.length) {
+                try {
+                    port = Integer.parseInt(args[i + 1]);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid port number after -p. Using default port " + port);
+                }
+            }
+        }
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server started on port " + port);
@@ -72,30 +75,34 @@ public class Main {
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             StringBuilder requestBuilder = new StringBuilder();
             String line;
+
             while ((line = in.readLine()) != null && !line.isEmpty()) {
                 requestBuilder.append(line).append("\r\n");
             }
-            String request = requestBuilder.toString();
 
-            /* Parse the request line because we want the GET request */
-            /* Ex. GET /index.html HTTP/1.1, Host: localhost, Connection: keep-alive,... */
+            String request = requestBuilder.toString();
+            // Parse the request line because we want the GET request
             String[] requestLines = request.split("\r\n");
-            /* Split request line into method, path, and HTTP version*/
-            /* GET, /index.html, HTTP/1.1 */
+
+            // Split request line into method, path, and HTTP version
             String[] requestLine = requestLines[0].split(" ");
 
-            String method = requestLine[0]; /* e.g., GET */
-            String path = requestLine[1];   /* e.g., /index.html*/
+            String method = requestLine[0]; // e.g., GET
+            String path = requestLine[1];   // e.g., /index.html
 
-            /* Increase the number of received request */
             requestCounter.incrementAndGet();
 
-            /* Assert that the request is a GET request and path is not empty */
+            // Valid request?
             if ("GET".equals(method) && path != null) {
                 handleGetRequest(clientSocket, path);
             }
-            else {    /* Otherwise, return an error to the client... */
-                sendResponse(clientSocket, "405 Method Not Allowed", "text/plain", "Method Not Allowed".getBytes());
+            else {    // Otherwise, return an error to the client...
+                sendResponse(
+                        clientSocket,
+                        "405 Method Not Allowed",
+                        "text/plain",
+                        "Method Not Allowed".getBytes()
+                );
             }
         } catch (IOException e) {
             System.out.println("Client handler error: " + e.getMessage());
@@ -114,7 +121,7 @@ public class Main {
 
         if ("/debug".equals(path)) {
 
-            /* Create the JSON object for the debug path */
+            // Create the JSON object for the debug path
             long uptimeSeconds = Instant.now().getEpochSecond() - START_TIME.getEpochSecond();
             JSONObject data = new JSONObject();
             data.put("name", SERVER_NAME);
@@ -122,23 +129,29 @@ public class Main {
             data.put("uptime", uptimeSeconds);
             data.put("owners", OWNERS);
 
-            /* Return the JSON object */
-            sendResponse(clientSocket, "200 OK", "application/json", data.toString().getBytes());
+            sendResponse(
+                    clientSocket,
+                    "200 OK",
+                    "application/json",
+                    data.toString().getBytes()
+            );
         }
-        /* Handle requests for images */
+
+        // Handle requests for images
         else if (path.endsWith(".png")) {
-            /*Extracts the file */
-            String assetName = path.substring("/assets/".length()); /* Ex. extract image.png */
-            Path filePath = IMAGES_DIRECTORY.resolve(assetName);    /* Resolves the full path to /misc/text.txt */
+            String assetName = path.substring("/assets/".length());
+            Path filePath = IMAGES_DIRECTORY.resolve(assetName);
             handleFileRequest(clientSocket, filePath);
         }
-        /* Handle requests for other assets (.txt) */
+
+        // Handle requests for other assets (.txt)
         else if (path.endsWith(".txt")) {
             String miscFileName = path.substring("/misc/".length());
             Path filePath = MISC_DIRECTORY.resolve(miscFileName);
             handleFileRequest(clientSocket, filePath);
         }
-        /* Handle html files or specific path that lead to files */
+
+        // Handle html files or specific path that lead to files
         else {
             Path filePath = getFilePath(path);
             handleFileRequest(clientSocket, filePath);
@@ -154,17 +167,35 @@ public class Main {
      * @throws IOException  If an I/O error occurs while handling the request.
      */
     private static void handleFileRequest(Socket clientSocket, Path filePath) throws IOException {
-        /* Check if file is exist and not a directory*/
+
         if(Files.exists(filePath) && !Files.isDirectory(filePath)) {
+
             String contentType = guessContentType(filePath);
+
             if (isSupportedContentType(contentType)) {
-                sendResponse(clientSocket, "200 OK", contentType, Files.readAllBytes(filePath));
-            } else {
-                sendResponse(clientSocket, "415 Unsupported Media Type", "text/plain", "Unsupported file type".getBytes());
+                sendResponse(
+                        clientSocket,
+                        "200 OK",
+                        contentType,
+                        Files.readAllBytes(filePath)
+                );
             }
-        } else {
+            else {
+                sendResponse(clientSocket,
+                        "415 Unsupported Media Type",
+                        "text/plain",
+                        "Unsupported file type".getBytes()
+                );
+            }
+        }
+        else {
             byte[] notFoundContent = "<h1>404 Not Found</h1>".getBytes();
-            sendResponse(clientSocket, "404 Not Found", "text/html", notFoundContent);
+            sendResponse(
+                    clientSocket,
+                    "404 Not Found",
+                    "text/html",
+                    notFoundContent
+            );
         }
     }
 
